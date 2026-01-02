@@ -49,16 +49,16 @@ typeAnimation()
 
 // Skills Data
 const skills = [
-  { name: "HTML", icon: "code", color: "#E34F26", comingSoon: false },
-  { name: "CSS", icon: "palette", color: "#1572B6", comingSoon: false },
-  { name: "JavaScript", icon: "braces", color: "#F7DF1E", comingSoon: false },
-  { name: "Figma", icon: "figma", color: "#F24E1E", comingSoon: false },
-  { name: "WordPress", icon: "layout", color: "#21759B", comingSoon: false },
-  { name: "GitHub", icon: "github", color: "#fff", comingSoon: false },
-  { name: "Python", icon: "terminal", color: "#3776AB", comingSoon: false },
-  { name: "Next.js", icon: "zap", color: "#fff", comingSoon: true },
-  { name: "Tailwind", icon: "wind", color: "#06B6D4", comingSoon: true },
-  { name: "React", icon: "code", color: "#61DAFB", comingSoon: true },
+  { name: "HTML", icon: "code", color: "#E34F26", level: 80, comingSoon: false },
+  { name: "CSS", icon: "palette", color: "#1572B6", level: 83, comingSoon: false },
+  { name: "JavaScript", icon: "braces", color: "#F7DF1E", level: 79, comingSoon: false },
+  { name: "Python", icon: "terminal", color: "#3776AB", level: 85, comingSoon: false },
+  { name: "Figma", icon: "figma", color: "#F24E1E", level: 55, comingSoon: false },
+  { name: "WordPress", icon: "layout", color: "#21759B", level: 50, comingSoon: false },
+  { name: "GitHub", icon: "github", color: "#fff", level: 60, comingSoon: false },
+  { name: "Next.js", icon: "zap", color: "#fff", level: 0, comingSoon: true },
+  { name: "Tailwind", icon: "wind", color: "#06B6D4", level: 0, comingSoon: true },
+  { name: "React", icon: "code", color: "#61DAFB", level: 0, comingSoon: true },
 ]
 
 // SVG Icons
@@ -101,12 +101,36 @@ skills.forEach((skill) => {
     </div>
     <p class="skill-name">${skill.name}</p>
     <div class="skill-progress">
-      <div class="skill-progress-bar"></div>
+      <div class="skill-progress-bar" data-level="${skill.level}"></div>
     </div>
   `
 
   skillsGrid.appendChild(skillCard)
 })
+
+const observer = new IntersectionObserver(
+  entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const bar = entry.target.querySelector('.skill-progress-bar')
+        const level = bar.dataset.level
+
+        // 🔥 Enable transition ONLY on scroll
+        bar.style.transition = 'width 2s ease-in-out'
+        bar.style.width = level + '%'
+
+        observer.unobserve(entry.target)
+      }
+    })
+  },
+  { threshold: 0.4 }
+)
+
+document.querySelectorAll('.skill-card').forEach(card => {
+  observer.observe(card)
+})
+
+
 
 // Projects Data
 const projects = [
@@ -259,3 +283,8 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     }
   })
 })
+
+// For nav ico 
+const menuBtn = document.querySelector(".mobile-menu-btn");
+const mobileMenu = document.getElementById("mobileMenu");
+const navLinks = mobileMenu.querySelectorAll("a");
